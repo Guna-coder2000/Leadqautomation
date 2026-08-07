@@ -1,0 +1,32 @@
+{
+  "credentials": {
+    "valid": {
+      "username": "cda94174@gmail.com",
+      "password": "Password@123"
+    },
+    "invalidPassword": {
+      "username": "cda94174@gmail.com",
+      "password": "WrongPassword@999"
+    },
+    "invalidUsername": {
+      "username": "invaliduser@gmail.com",
+      "password": "Password@123"
+    },
+    "emptyUsername": {
+      "username": "",
+      "password": "Password@123"
+    },
+    "emptyPassword": {
+      "username": "cda94174@gmail.com",
+      "password": ""
+    },
+    "bothEmpty": {
+      "username": "",
+      "password": ""
+    },
+    "invalidEmailFormat": {
+      "username": "notanemail",
+      "password": "Password@123"
+    }
+  }
+}

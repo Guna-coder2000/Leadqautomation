@@ -1,0 +1,10 @@
+{
+  "validContact": {
+    "name": "John Smith",
+    "jobTitle": "Senior Software Engineer",
+    "company": "Google Inc",
+    "email": "john.smith@google.com",
+    "phone": "4155552671"
+  },
+  "searchQuery": "John Smith"
+}

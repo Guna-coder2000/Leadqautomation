@@ -1,0 +1,16 @@
+{
+  "profile": {
+    "updateFirstName": {
+      "tempName": "John"
+    },
+    "updatePhone": {
+      "newPhone": "+12015550123"
+    },
+    "updateLastName": {
+      "newLastName": "Smith"
+    },
+    "updateCity": {
+      "newCity": "New York"
+    }
+  }
+}

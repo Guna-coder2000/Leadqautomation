@@ -1,0 +1,40 @@
+name: LeadQ Playwright E2E Tests
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  schedule:
+    - cron: '0 2 * * *' # Run every day at 2 AM
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 18
+        
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+      
+    - name: Run Playwright tests
+      run: npm run test
+      
+    - name: Generate Allure Report (Includes History/Executor Generation)
+      if: always()
+      run: npm run report:generate
+      
+    - name: Upload Allure Report as Artifact
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: allure-report
+        path: allure-report/
+        retention-days: 30

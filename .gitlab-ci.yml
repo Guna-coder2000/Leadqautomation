@@ -1,0 +1,40 @@
+image: mcr.microsoft.com/playwright:v1.44.0-focal
+
+stages:
+  - test
+  - report
+
+variables:
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+
+cache:
+  key:
+    files:
+      - package-lock.json
+  paths:
+    - .npm/
+
+playwright-tests:
+  stage: test
+  script:
+    - npm ci
+    - npm run test
+  allow_failure: true
+  artifacts:
+    when: always
+    paths:
+      - allure-results/
+    expire_in: 30 days
+
+generate-allure-report:
+  stage: report
+  script:
+    - npm ci
+    - npm run report:generate
+  artifacts:
+    when: always
+    paths:
+      - allure-report/
+    expire_in: 30 days
+  dependencies:
+    - playwright-tests
