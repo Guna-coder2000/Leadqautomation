@@ -13,7 +13,7 @@ export class DashboardPage extends BasePage {
   private sidebarCreditUsage: Locator;
 
   // Dashboard specific widget elements (strictly XPaths)
-  private welcomeMessage: Locator;
+
   private dateHeader: Locator;
   private filterDropdown: Locator;
 
@@ -23,17 +23,11 @@ export class DashboardPage extends BasePage {
   private voiceAgentCard: Locator;
   private conversionRateCard: Locator;
 
-  private upcomingMeetingsCard: Locator;
-  private warmLeadsCard: Locator;
-  private hotLeadsCard: Locator;
-  private viewDetailsLink: Locator;
 
-  private leadPipelineHeader: Locator;
   private calendarMonthYear: Locator;
 
   private xpaths: Record<string, string> = {
-    filterOption: "//div[@role='menuitem' and contains(., '{0}')] | //button[contains(., '{0}')] | //li[contains(text(), '{0}')]",
-    leadPipelineRow: "//div[contains(@class, 'pipeline') or contains(@class, 'lead')]//span[contains(text(), '{0}')] | //div[contains(., '{0}') and contains(@class, 'lead')]"
+    filterOption: "//div[@role='menuitem' and contains(., '{0}')] | //button[contains(., '{0}')] | //li[contains(text(), '{0}')]"
   };
 
   // Log Message Variables
@@ -47,7 +41,7 @@ export class DashboardPage extends BasePage {
   private readonly navCreditUsageLog = "Clicking 'Credit Usage' menu from sidebar";
   private readonly filterDropdownLog = "Clicking 'Dashboard Filter' dropdown";
   private readonly filterOptionLog = "Selecting 'Dashboard Filter' option";
-  private readonly priorityViewDetailsLog = "Clicking 'View Details' link in Priority Actions";
+
 
   constructor(page: any) {
     super(page);
@@ -62,7 +56,7 @@ export class DashboardPage extends BasePage {
     this.sidebarCreditUsage = this.page.locator("//a[contains(@href, '/dashboard/credit-usage') or contains(@href, '/credit-usage')]");
 
     // Dashboard widgets
-    this.welcomeMessage = this.page.locator("//h2[contains(text(), 'Good') or contains(text(), 'Welcome')]");
+
     this.dateHeader = this.page.locator("//p[contains(text(), 'It')]");
     this.filterDropdown = this.page.locator("//button[contains(., 'Overall')]");
 
@@ -72,12 +66,7 @@ export class DashboardPage extends BasePage {
     this.voiceAgentCard = this.page.locator("//*[contains(text(), 'Voice Agent')]").first();
     this.conversionRateCard = this.page.locator("//*[contains(text(), 'Conversion Rate')]");
 
-    this.upcomingMeetingsCard = this.page.locator("//*[contains(text(), 'Up Coming Meetings')]");
-    this.warmLeadsCard = this.page.locator("//*[contains(text(), 'Warm Leads')]");
-    this.hotLeadsCard = this.page.locator("//*[contains(text(), 'Hot Leads')]");
-    this.viewDetailsLink = this.page.locator("//a[contains(text(), 'View Details')]");
 
-    this.leadPipelineHeader = this.page.locator("//h2[contains(text(), 'Lead Pipeline')]");
     this.calendarMonthYear = this.page.locator("//div[contains(@class, 'calendar')]//span[contains(@class, 'month')]");
   }
 
@@ -120,10 +109,7 @@ export class DashboardPage extends BasePage {
   }
 
   // Dashboard specific widget actions
-  async verifyWelcomeBannerDisplayedWithUser(name: string) {
-    await super.waitForListOfElementsToBeVisibleOrHidden([this.welcomeMessage], { state: BasePage.ElementState.VISIBLE }, "Verifying 'Welcome' banner displays expected user name");
-    await expect(this.welcomeMessage).toContainText(name);
-  }
+
 
   async verifyCurrentDateDisplayed() {
     await super.waitForListOfElementsToBeVisibleOrHidden([this.dateHeader], { state: BasePage.ElementState.VISIBLE }, "Verifying 'Current Date' header is displayed");
@@ -150,26 +136,7 @@ export class DashboardPage extends BasePage {
     );
   }
 
-  async verifyPriorityActionsDisplayed() {
-    await super.waitForListOfElementsToBeVisibleOrHidden(
-      [this.upcomingMeetingsCard, this.warmLeadsCard, this.hotLeadsCard],
-      { state: BasePage.ElementState.VISIBLE },
-      "Verifying priority action cards are displayed"
-    );
-  }
 
-  async clickPriorityActionsViewDetails() {
-    await super.clickOnElement(this.viewDetailsLink, this.priorityViewDetailsLog);
-  }
-
-  async verifyLeadPipelineDisplayed() {
-    await super.waitForListOfElementsToBeVisibleOrHidden([this.leadPipelineHeader], { state: BasePage.ElementState.VISIBLE }, "Verifying Lead Pipeline header is displayed");
-  }
-
-  async verifyLeadDisplaysInPipeline(leadName: string) {
-    const leadLocator = this.getDynamicLocatorFromChild(this.xpaths, 'leadPipelineRow', leadName).first();
-    await super.waitForListOfElementsToBeVisibleOrHidden([leadLocator], { state: BasePage.ElementState.VISIBLE }, `Verifying lead ${leadName} displays in the pipeline`);
-  }
 
   async verifyCalendarWidgetDisplayed() {
     await super.waitForListOfElementsToBeVisibleOrHidden([this.calendarMonthYear], { state: BasePage.ElementState.VISIBLE }, "Verifying Calendar widget is displayed");

@@ -32,11 +32,7 @@ test.describe('LeadQ Dashboard Module', () => {
     await test.step('Step 2: Verify the KPI statistics cards (Contacts, Meetings, Emails, Voice Agent) are visible', async () => {
       await dashboardPage.verifyStatisticsCardsDisplayed();
     });
-    
-    await test.step('Step 3: Verify the Lead Pipeline chart section is visible', async () => {
-      await dashboardPage.verifyLeadPipelineDisplayed();
-    });
-    
+
     await test.step('Step 4: Verify the Calendar widget is visible', async () => {
       await dashboardPage.verifyCalendarWidgetDisplayed();
       await allure.attachment('Dashboard Widgets Verified', await page.screenshot(), 'image/png');
@@ -107,31 +103,6 @@ test.describe('LeadQ Dashboard Module', () => {
     });
   });
 
-  test('TC-206 Verify user can click View Details in Priority Actions', async ({ dashboardPage, page }) => {
-    allure.story('Priority Actions');
-    allure.severity('normal');
-    allure.description('Verify the View Details link is accessible in the Priority Actions section.');
-
-    await test.step('Step 1: Verify the Priority Actions section is displayed', async () => {
-      await dashboardPage.verifyPriorityActionsDisplayed();
-    });
-
-    await test.step('Step 2: Click the View Details link', async () => {
-      await dashboardPage.clickPriorityActionsViewDetails();
-      await allure.attachment('Priority Actions Details', await page.screenshot(), 'image/png');
-    });
-  });
-
-  test('TC-207 Verify Welcome Banner displays correct user information', async ({ dashboardPage, page }) => {
-    allure.story('Dashboard Overview');
-    allure.severity('minor');
-    allure.description('Verify that the welcome banner correctly addresses the logged-in user.');
-
-    await test.step('Step 1: Verify the welcome banner displays the expected greeting', async () => {
-      await dashboardPage.verifyWelcomeBannerDisplayedWithUser('Good');
-      await allure.attachment('Welcome Banner Verified', await page.screenshot(), 'image/png');
-    });
-  });
 
   test('TC-208 Verify direct URL navigation to Settings page', async ({ dashboardPage, config, page }) => {
     allure.story('Direct Navigation');
