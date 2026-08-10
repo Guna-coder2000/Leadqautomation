@@ -36,7 +36,8 @@ export default defineConfig({
       use: {
         // CI servers use bundled Chromium; local machine uses installed Google Chrome
         ...(isCI ? {} : { channel: 'chrome' }),
-        headless: true,
+        // Run headed (visible) locally and on local Jenkins, but headless in cloud CI
+        headless: !!(process.env.GITHUB_ACTIONS || process.env.GITLAB_CI),
         viewport: { width: 1280, height: 720 },
         ignoreHTTPSErrors: true,
       },
