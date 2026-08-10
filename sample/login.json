@@ -1,23 +1,23 @@
 {
   "credentials": {
     "valid": {
-      "username": "testuser@leadq.ai",
-      "password": "LeadQ@2026"
+      "username": "cda94174@gmail.com",
+      "password": "Password@123"
     },
     "invalidPassword": {
-      "username": "testuser@leadq.ai",
+      "username": "cda94174@gmail.com",
       "password": "WrongPassword@999"
     },
     "invalidUsername": {
-      "username": "invaliduser@leadq.ai",
-      "password": "LeadQ@2026"
+      "username": "invaliduser@gmail.com",
+      "password": "Password@123"
     },
     "emptyUsername": {
       "username": "",
-      "password": "LeadQ@2026"
+      "password": "Password@123"
     },
     "emptyPassword": {
-      "username": "testuser@leadq.ai",
+      "username": "cda94174@gmail.com",
       "password": ""
     },
     "bothEmpty": {
