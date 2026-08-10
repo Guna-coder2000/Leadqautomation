@@ -12,6 +12,8 @@ pipeline {
     stages {
         stage('Install Dependencies') {
             steps {
+                // Copy the local .env file so Jenkins has the email credentials
+                bat 'copy "C:\\Users\\gunasekhar.p\\OneDrive - TestPerform\\Desktop\\Leadq-automation\\.env" .env || echo No .env file found'
                 bat 'npm install'
             }
         }
@@ -32,8 +34,7 @@ pipeline {
 
         stage('Generate Allure Report') {
             steps {
-                bat 'node scripts/save-history.js'
-                bat 'npx allure generate allure-results --clean -o allure-report'
+                bat 'npm run report:generate'
             }
         }
     }
