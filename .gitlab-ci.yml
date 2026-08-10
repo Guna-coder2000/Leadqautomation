@@ -1,4 +1,4 @@
-image: mcr.microsoft.com/playwright:v1.44.0-focal
+image: mcr.microsoft.com/playwright:v1.56.0-noble
 
 stages:
   - test
@@ -6,6 +6,7 @@ stages:
 
 variables:
   npm_config_cache: "$CI_PROJECT_DIR/.npm"
+  CI: "true"
 
 cache:
   key:
@@ -18,7 +19,8 @@ playwright-tests:
   stage: test
   script:
     - npm ci
-    - npm run test
+    - npx playwright install --with-deps
+    - npx playwright test
   allow_failure: true
   artifacts:
     when: always
@@ -30,7 +32,9 @@ generate-allure-report:
   stage: report
   script:
     - npm ci
-    - npm run report:generate
+    - node scripts/save-history.js
+    - npx allure generate allure-results --clean -o allure-report
+    - node scripts/send-email-report.js
   artifacts:
     when: always
     paths:

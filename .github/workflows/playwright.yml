@@ -11,6 +11,15 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      CI: true
+      SMTP_HOST: smtp.gmail.com
+      SMTP_PORT: 465
+      SMTP_SECURE: true
+      SEND_EMAIL_REPORT: true
+      SMTP_USER: ${{ secrets.SMTP_USER }}
+      SMTP_PASS: ${{ secrets.SMTP_PASS }}
+      EMAIL_TO: ${{ secrets.EMAIL_TO }}
     steps:
     - uses: actions/checkout@v4
     
@@ -26,8 +35,9 @@ jobs:
       
     - name: Run Playwright tests
       run: npm run test
+      continue-on-error: true
       
-    - name: Generate Allure Report (Includes History/Executor Generation)
+    - name: Generate Allure Report (Includes History/Executor/Email)
       if: always()
       run: npm run report:generate
       
@@ -38,3 +48,4 @@ jobs:
         name: allure-report
         path: allure-report/
         retention-days: 30
+

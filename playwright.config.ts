@@ -5,6 +5,9 @@ const env = process.env.ENV || 'uat';
 const configFile = `./src/configs/${env}.json`;
 const config = JSON.parse(readFileSync(configFile, 'utf-8'));
 
+// Detect CI environment - CI servers use Chromium, local uses installed Chrome
+const isCI = !!(process.env.CI || process.env.GITHUB_ACTIONS || process.env.JENKINS_URL || process.env.GITLAB_CI);
+
 export default defineConfig({
   testDir: './src/tests',
   timeout: 90000,
@@ -31,9 +34,8 @@ export default defineConfig({
     {
       name: 'chrome',
       use: {
-        // use the installed Google Chrome browser on the machine
-        channel: 'chrome',
-        // common options
+        // CI servers use bundled Chromium; local machine uses installed Google Chrome
+        ...(isCI ? {} : { channel: 'chrome' }),
         headless: true,
         viewport: { width: 1280, height: 720 },
         ignoreHTTPSErrors: true,
