@@ -38,8 +38,8 @@ test.describe('Enterprise API Negative Scenarios (404 and 500 Errors)', () => {
     allure.description('Verify the system gracefully handles internal server errors without crashing.');
 
     await test.step('Step 1: Send request to an endpoint that triggers a server error', async () => {
-      // httpstat.us is a public service that mimics HTTP status codes
-      const response = await context.get('https://httpstat.us/500');
+      // Using httpbin.org which is much more stable than httpstat.us for mimicking status codes
+      const response = await context.get('https://httpbin.org/status/500');
       
       await test.step('Step 2: Verify the response status code is exactly 500', async () => {
         expect(response.status()).toBe(500);
