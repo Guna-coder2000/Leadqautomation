@@ -1,97 +1,129 @@
 # LeadQ Playwright Automation Framework
 
-Welcome to the **LeadQ Automation Framework**! This is a senior-level, enterprise-grade Playwright framework built with TypeScript. It features Page Object Models (POM), dynamic API testing, Allure trend reporting, and adaptive CI/CD email notifications.
+Welcome to the **LeadQ Automation Framework**. This is a senior-level, enterprise-grade Playwright framework built with TypeScript. It features Page Object Models (POM), dynamic API testing, Allure trend reporting, and adaptive CI/CD email notifications.
 
-This document is your **Pin-to-Pin Master Guide**. It explains exactly how to run tests, configure passwords securely, and run pipelines.
+This document is your **Pin-to-Pin Master Guide**. It explains exactly what the framework is, why it is built this way, where to find things, how to configure credentials, and how to run it anywhere.
 
 ---
 
-## 1. Local Setup & Running Tests
+## 1. What, Why, and Where (Architecture)
+
+This framework is designed for scale, stability, and crystal-clear reporting.
+
+### Where things are located:
+* **`src/tests/`**: Contains all your `.spec.ts` files (e.g., `e2e/login.spec.ts`).
+* **`src/pages/`**: Contains your Page Object Models (e.g., `LoginPage.ts`).
+* **`src/utils/`**: Contains your custom assertions, validations, and the `ConsoleStepReporter.ts`.
+* **`playwright.config.ts`**: The global configuration (timeouts, browsers, reporters).
+
+### Why it is built this way (The Master Flow):
+1. **Spec Files (The "What"):** Spec files only contain test data inputs (e.g., `await loginPage.enterUsername('user@leadq.ai')`). They **do not** contain locators or complex logic.
+2. **Page Objects (The "Where"):** Page objects declare exactly where elements are located on the screen (`private usernameInput: Locator`) and hold human-readable log strings (`"Entering email address"`).
+3. **BasePage (The "How"):** All page objects extend `BasePage.ts`. It handles the low-level Playwright interactions (clicks, fills, waits), logs the human strings to the terminal, and catches errors to throw custom exceptions.
+4. **ConsoleStepReporter (The "Proof"):** Formats the console logs and generates a **Client Proof Report** when a test fails, clearly distinguishing between a [SCRIPT TIMEOUT] vs a [CONFIRMED APPLICATION BUG].
+
+---
+
+## 2. Core Setup & Credentials (The `.env` File)
+
+Your framework dynamically adapts to where it is running, but for Local Execution, you must configure your `.env` file.
+
+1. Find the `.env.example` file in the root directory.
+2. Copy it and rename the new file to exactly **`.env`**.
+3. Open `.env` and fill in the following credentials:
+
+### A. Email Reporting Credentials
+* **Why:** The framework sends an HTML summary email the exact second the Allure report finishes generating.
+* **How to get the password:** Google blocked regular passwords for automation. You **cannot** use your normal password.
+   1. Go to your Google Account -> Security -> 2-Step Verification -> **App Passwords**.
+   2. Generate a 16-letter App Password (e.g. `abcd efgh ijkl mnop`).
+   3. Paste it into `.env` under `SMTP_PASS` (remove the spaces).
+* **Where:** Put your email in `SMTP_USER` and the recipient(s) in `EMAIL_TO`.
+
+### B. GitHub Personal Access Token (PAT)
+* **Why:** You need this token to push code to GitHub securely from the command line.
+* **How to get it:**
+   1. Go to https://github.com/settings/tokens
+   2. Click **Generate new token (classic)**. Name it `leadq-push`.
+   3. **CRITICAL:** Check the **`repo`** checkbox (Full control of private repositories).
+   4. Click Generate and copy the token (`ghp_...`).
+* **Where:** Paste it into `.env` under `GITHUB_PAT`.
+
+### C. Jenkins Credentials
+* **Why:** To run Jenkins locally on your machine.
+* **How to get it:** The initial admin password is automatically saved on your computer when Jenkins first starts. Open `C:\Users\<your_username>\.jenkins\secrets\initialAdminPassword` to find it.
+* **Where:** Paste it into `.env` under `JENKINS_INITIAL_ADMIN_PASSWORD`.
+
+---
+
+## 3. Local Execution & Validation
 
 ### Installation
-If you just downloaded this code, open a terminal in this folder and run:
+Open a terminal in this folder and run:
 ```bash
 npm install
 npx playwright install --with-deps
 ```
 
 ### Running Tests
-To run all your tests (UI & API) across the framework:
+To run all tests (UI & API) in **Headed Mode** (browser pops open):
 ```bash
 npm run test
 ```
 
-### Generating the Allure Report
-Once tests are finished, generate and open the beautiful Allure HTML report:
+### Generating the Report & Sending Email
+Once tests finish, generate the beautiful Allure HTML report and automatically send the email:
 ```bash
 npm run report:allure
 ```
-*(When you are done looking at the report, click the terminal and press `Ctrl+C` to stop the server).*
+*(When done, click the terminal and press `Ctrl+C` to stop the server).*
 
 ---
 
-## 2. Adaptive Email Notifications
+## 4. GitHub Actions (Cloud CI/CD)
 
-This framework automatically sends an HTML email (Total Passed/Failed) to your stakeholders the exact second the Allure report finishes generating. 
+The framework is perfectly configured for GitHub Actions (`.github/workflows/playwright.yml`). It runs **Headless** to avoid crashing the cloud container.
 
-### How to configure it (Local Machine):
-1. Copy the `.env.example` file and rename the new file to exactly **`.env`**.
-2. Open `.env` and fill in your email address (`SMTP_USER`) and the destination addresses (`EMAIL_TO`).
-3. **The Password Rule:** Google blocked regular passwords for automation. You **cannot** use your normal password.
-   - Go to your Google Account -> Security -> 2-Step Verification -> **App Passwords**.
-   - Generate a 16-letter App Password (e.g. `abcd efgh ijkl mnop`).
-   - Paste that password into your `.env` file under `SMTP_PASS` (remove the spaces).
-4. Run `npm run report:allure` and the email will send automatically!
-
----
-
-## 3. GitHub Actions (Cloud CI/CD)
-
-Your framework is already perfectly configured for GitHub Actions via the `.github/workflows/playwright.yml` file.
+### How to configure it:
+1. Go to your GitHub Repository -> **Settings** -> **Secrets and variables** -> **Actions**.
+2. Click **New repository secret**.
+3. Add these exact secrets so the cloud runner can send emails:
+   - `SMTP_USER` (Your Gmail address)
+   - `SMTP_PASS` (Your 16-letter App Password)
+   - `EMAIL_TO` (Destination email address)
 
 ### How to run it:
-1. Push your code to GitHub. GitHub Actions will trigger automatically!
-2. To make the emails work in GitHub, you must tell GitHub your secrets.
-3. Go to your GitHub Repository -> **Settings** -> **Secrets and variables** -> **Actions**.
-4. Click **New repository secret**.
-5. Add the following secrets one by one:
-   - Name: `SMTP_USER` | Value: `your_email@gmail.com`
-   - Name: `SMTP_PASS` | Value: `your_16_letter_app_password`
-   - Name: `EMAIL_TO` | Value: `manager@company.com`
-
-> **Note:** GitHub securely stores these. The framework will automatically read them and send the emails from the cloud!
+Push your code to GitHub. The pipeline will automatically trigger on pushes and pull requests to the `main` branch, and every night at 2:00 AM!
 
 ---
 
-## 4. Jenkins Pipeline (Local or Enterprise)
+## 5. Jenkins Pipeline (Local or Enterprise)
 
-Your framework contains a production-ready `Jenkinsfile`.
+The framework contains a production-ready `Jenkinsfile`.
 
-### If you are running Jenkins locally on Windows:
-1. Open a terminal and start Jenkins: `java -jar jenkins.war --enable-future-java`
-2. Wait 20 seconds, open `http://localhost:8080`, and paste your Initial Admin Password. 
-   *(Note: You saved this password at the very bottom of your `.env` file!)*
-3. Install the **Allure Plugin** inside Jenkins (Manage Jenkins -> Plugins).
-4. Create a new "Pipeline" job, point it to your GitHub repository URL, and click **Build Now**.
+### How to set it up:
+1. Start Jenkins locally: `java -jar jenkins.war --enable-future-java`
+2. Open `http://localhost:8080` and log in.
+3. Go to Manage Jenkins -> Plugins -> Available plugins -> Search and install **Allure**.
+4. Go to Manage Jenkins -> Tools -> Scroll to **Allure Commandline** -> Click Add Allure Commandline -> Name it `allure` -> Check "Install automatically" -> Click Save.
 
-### How to configure Email Secrets in Jenkins:
-1. Go to Jenkins -> **Manage Jenkins** -> **Credentials**.
-2. Add a new **Secret text** credential for your 16-letter App Password.
-3. Jenkins will pass this securely to the framework when it runs.
+### How to run it:
+1. Click **New Item** -> Name it `LeadQ Pipeline` -> Select **Pipeline** -> Click OK.
+2. Under Pipeline Definition, select **Pipeline script from SCM**.
+3. SCM: **Git** -> URL: `https://github.com/Guna-coder2000/Leadqautomation.git`.
+4. Branch Specifier: `*/main` -> Script Path: `Jenkinsfile` -> Save.
+5. Click **Build Now**!
 
 ---
 
-## 5. GitLab CI
+## 6. GitLab CI
 
-If your company uses GitLab, the framework is ready to go via the `.gitlab-ci.yml` file.
+If your company uses GitLab, the framework is ready to go via `.gitlab-ci.yml`.
+
+### How to configure it:
 1. Push your code to GitLab. 
 2. Go to Settings -> **CI/CD** -> **Variables**.
-3. Add your `SMTP_USER` and `SMTP_PASS` there. The pipeline will automatically run in 2 stages (Test & Report) and send the email upon completion.
+3. Add your `SMTP_USER`, `SMTP_PASS`, and `EMAIL_TO` as variables (Mask the password).
 
----
-
-## Framework Architecture Notes
-
-* **Page Object Models (POM):** All UI interactions are securely abstracted in the `src/pages/` folder.
-* **Negative API Testing:** The framework rigorously validates backend health (404, 500, empty responses) in the `src/tests/api/` folder.
-* **Executor Tracking:** The `scripts/save-history.js` file automatically detects whether you are running on Local, Jenkins, GitHub, or GitLab, and explicitly prints that on the Allure Dashboard!
+### How to run it:
+The pipeline will automatically run in 2 stages (Test & Report) upon code push, and will send the email report when finished.
