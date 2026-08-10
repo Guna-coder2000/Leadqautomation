@@ -113,4 +113,28 @@ test('Valid Login', async ({ loginPage }) => {
 > 3. **Page Objects & Fixtures:** Keep our Spec files incredibly clean and English-like.
 > 4. **Allure & Native Configs:** Generate stunning HTML reports with zero screenshot code.
 >
+---
+
+## 6. Q&A: Handling Tough Audience Questions
+
+**[Speaker Note - What to say:]**
+> "You might get grilled by senior developers or QA managers with tough questions about 'False Failures'. Here is exactly how to answer them based on our codebase."
+
+### Question 1: "If a button is not clickable, does the framework tell you if it's a locator error, a DOM load error, or a real bug?"
+**Your Answer:**
+> "Yes, absolutely. Our `ConsoleStepReporter.ts` is programmed to read the Playwright Error Stack and the exact step we were on. 
+> * If the UI re-rendered while we were clicking, it catches a `DetachedElementError` and prints **🚨 STALE / DETACHED ELEMENT ERROR**.
+> * If the locator is completely wrong or the button never appeared, the click times out. The reporter sees it was a 'Click' step and prints **⚠️ SCRIPT / ELEMENT LOCATOR TIMEOUT**.
+> * If the button was clicked successfully, but the next page didn't load (an assertion failed), it prints **👉 🐞 CONFIRMED APPLICATION BUG**. 
+> It categorizes the error perfectly so we don't have to guess."
+
+### Question 2: "What if a button works fine when I click it manually on the real UI, but your automation fails and says 'Element not interactable'? Isn't your framework giving false failures?"
+**Your Answer:**
+> "No, it's actually catching a race condition that humans are too slow to see! 
+> Playwright has strict **Actionability Checks**. Before it clicks a button, it checks 5 things: Is it attached? Is it visible? Is it stable (not animating)? Is it enabled? **Is it receiving events?**
+> 
+> If you can click it, but Playwright can't, it almost always means there is an invisible transparent overlay (like a fading loading spinner) temporarily blocking the button for 200 milliseconds. Playwright tries to click it faster than the human eye, hits the invisible overlay, and fails. It's not a false failure; it's a true race condition in the app's frontend rendering."
+
+---
+
 > This is a highly scalable, enterprise-grade architecture. Thank you, I am happy to answer any questions."
