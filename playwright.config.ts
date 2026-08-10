@@ -40,8 +40,13 @@ export default defineConfig({
   },
   projects: [
     {
+      name: 'API-Tests',
+      testMatch: /.*api\/.*/, // Runs first to ensure backend is healthy
+    },
+    {
       name: 'Chrome-1-Login',
       testMatch: /.*login\.spec\.ts/,
+      dependencies: ['API-Tests'], // UI tests only start if APIs are healthy
     },
     {
       name: 'Chrome-2-Dashboard',
@@ -52,10 +57,6 @@ export default defineConfig({
       name: 'Chrome-3-Other-UI', // Captures contacts, profile, etc.
       testIgnore: [/.*login\.spec\.ts/, /.*dashboard\.spec\.ts/, /.*api\/.*/],
       dependencies: ['Chrome-2-Dashboard'], 
-    },
-    {
-      name: 'API-Tests',
-      testMatch: /.*api\/.*/, // API tests have no dependencies, they run instantly
     }
   ],
 });
