@@ -40,23 +40,28 @@ export default defineConfig({
   },
   projects: [
     {
-      name: 'API-Tests',
+      name: '0-API-Health-Checks',
       testMatch: /.*api\/.*/, // Runs first to ensure backend is healthy
     },
     {
-      name: 'Chrome-1-Login',
+      name: '1-Chrome-Login',
       testMatch: /.*login\.spec\.ts/,
-      dependencies: ['API-Tests'], // UI tests only start if APIs are healthy
+      dependencies: ['0-API-Health-Checks'], // UI tests only start if APIs are healthy
     },
     {
-      name: 'Chrome-2-Dashboard',
+      name: '2-Chrome-Dashboard',
       testMatch: /.*dashboard\.spec\.ts/,
-      dependencies: ['Chrome-1-Login'],
+      dependencies: ['1-Chrome-Login'],
     },
     {
-      name: 'Chrome-3-Other-UI', // Captures contacts, profile, etc.
-      testIgnore: [/.*login\.spec\.ts/, /.*dashboard\.spec\.ts/, /.*api\/.*/],
-      dependencies: ['Chrome-2-Dashboard'], 
+      name: '3-Chrome-Contacts', 
+      testMatch: /.*contacts\.spec\.ts/, // Specifically targets Contacts
+      dependencies: ['2-Chrome-Dashboard'], 
+    },
+    {
+      name: '4-Chrome-Other-UI', // Captures any future UI tests you might add later
+      testIgnore: [/.*login\.spec\.ts/, /.*dashboard\.spec\.ts/, /.*contacts\.spec\.ts/, /.*api\/.*/],
+      dependencies: ['2-Chrome-Dashboard'], 
     }
   ],
 });
