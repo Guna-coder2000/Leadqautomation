@@ -28,27 +28,38 @@ const servicesToMonitor: HealthCheckConfig[] = [
 
 test.describe('Enterprise API Health Checks', () => {
 
+  let apiClient: ApiClient;
+  let healthMonitor: HealthMonitor;
+  let context: any; // APIRequestContext
+
+  test.beforeAll(async () => {
+    // Manually create APIRequestContext to reuse across tests
+    context = await request.newContext();
+    apiClient = new ApiClient(context);
+    healthMonitor = new HealthMonitor(apiClient);
+  });
+
+  test.afterAll(async () => {
+    if (context) {
+      await context.dispose();
+    }
+  });
+
   for (const service of servicesToMonitor) {
-    test(`Health Check for ${service.serviceName}`, async ({ request }) => {
-      const apiClient = new ApiClient(request);
-      const healthMonitor = new HealthMonitor(apiClient);
-      
+    test(`Health Check for ${service.serviceName}`, async () => {
       // Execute the comprehensive health check
       const isHealthy = await healthMonitor.checkServiceHealth(service);
-      
+
       // The test passes if the service is healthy
       // The HealthMonitor internally handles assertions on Status, SLA, and Schema
       expect(isHealthy, `${service.serviceName} is not healthy`).toBeTruthy();
     });
   }
 
-  test('Check all services concurrently', async ({ request }) => {
-    const apiClient = new ApiClient(request);
-    const healthMonitor = new HealthMonitor(apiClient);
-    
+  test('Check all services concurrently', async () => {
     // Alternatively, you can run all checks in parallel for a massive speedup
     const results = await healthMonitor.checkMultipleServices(servicesToMonitor);
-    
+
     // Check if any service failed
     for (const [serviceName, isHealthy] of results.entries()) {
       expect(isHealthy, `Parallel check: ${serviceName} is down`).toBeTruthy();
