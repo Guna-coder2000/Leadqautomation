@@ -18,7 +18,6 @@ export class DashboardPage extends BasePage {
   private meetingsCard: Locator;
   private emailsCard: Locator;
   private voiceAgentCard: Locator;
-  private conversionRateCard: Locator;
 
 
   private calendarMonthYear: Locator;
@@ -55,7 +54,6 @@ export class DashboardPage extends BasePage {
     this.meetingsCard = this.page.locator("//*[contains(text(), 'Meetings')]").first();
     this.emailsCard = this.page.locator("//*[contains(text(), 'Emails')]").first();
     this.voiceAgentCard = this.page.locator("//*[contains(text(), 'Voice Agent')]").first();
-    this.conversionRateCard = this.page.locator("//*[contains(text(), 'Conversion Rate')]");
 
 
     this.calendarMonthYear = this.page.locator("//div[contains(@class, 'calendar')]//span[contains(@class, 'month')]");
@@ -105,7 +103,7 @@ export class DashboardPage extends BasePage {
 
   async verifyStatisticsCardsDisplayed() {
     await super.waitForListOfElementsToBeVisibleOrHidden(
-      [this.contactsCard, this.meetingsCard, this.emailsCard, this.voiceAgentCard, this.conversionRateCard],
+      [this.contactsCard, this.meetingsCard, this.emailsCard, this.voiceAgentCard],
       { state: BasePage.ElementState.VISIBLE },
       "Verifying KPI statistics cards are displayed on the dashboard"
     );
