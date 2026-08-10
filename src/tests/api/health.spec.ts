@@ -28,25 +28,11 @@ const servicesToMonitor: HealthCheckConfig[] = [
 
 test.describe('Enterprise API Health Checks', () => {
 
-  let apiClient: ApiClient;
-  let healthMonitor: HealthMonitor;
-  let context: any; // APIRequestContext
-
-  test.beforeAll(async () => {
-    // Manually create APIRequestContext to reuse across tests
-    context = await request.newContext();
-    apiClient = new ApiClient(context);
-    healthMonitor = new HealthMonitor(apiClient);
-  });
-
-  test.afterAll(async () => {
-    if (context) {
-      await context.dispose();
-    }
-  });
-
   for (const service of servicesToMonitor) {
-    test(`Health Check for ${service.serviceName}`, async () => {
+    test(`Health Check for ${service.serviceName}`, async ({ request }) => {
+      const apiClient = new ApiClient(request);
+      const healthMonitor = new HealthMonitor(apiClient);
+      
       // Execute the comprehensive health check
       const isHealthy = await healthMonitor.checkServiceHealth(service);
       
@@ -56,7 +42,10 @@ test.describe('Enterprise API Health Checks', () => {
     });
   }
 
-  test('Check all services concurrently', async () => {
+  test('Check all services concurrently', async ({ request }) => {
+    const apiClient = new ApiClient(request);
+    const healthMonitor = new HealthMonitor(apiClient);
+    
     // Alternatively, you can run all checks in parallel for a massive speedup
     const results = await healthMonitor.checkMultipleServices(servicesToMonitor);
     
