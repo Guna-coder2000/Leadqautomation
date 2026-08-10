@@ -11,8 +11,8 @@ const isCI = !!(process.env.CI || process.env.GITHUB_ACTIONS || process.env.JENK
 export default defineConfig({
   testDir: './src/tests',
   timeout: 90000,
-  fullyParallel: true, // Enabled for parallel execution within stages
-  // workers: undefined, // Let Playwright decide based on CPU cores
+  fullyParallel: false, // Strict sequential execution within stages
+  workers: 1, // Only one worker runs at a time (one after another)
   expect: {
     timeout: 10000
   },
