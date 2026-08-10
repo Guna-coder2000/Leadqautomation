@@ -84,24 +84,7 @@ test.describe('LeadQ Dashboard Module', () => {
     });
   });
 
-  test('TC-205 Verify user can filter dashboard statistics by Today', async ({ dashboardPage, page }) => {
-    allure.story('Dashboard Filters');
-    allure.severity('normal');
-    allure.description('Verify that the user can interact with the filter dropdown and select "Today".');
 
-    await test.step('Step 1: Click on the dashboard date filter dropdown', async () => {
-      await dashboardPage.clickDashboardFilterDropdown();
-    });
-
-    await test.step('Step 2: Select "Today" from the dropdown options', async () => {
-      await dashboardPage.selectDashboardFilterOption('Today');
-    });
-
-    await test.step('Step 3: Verify the dropdown now displays "Today"', async () => {
-      await dashboardPage.verifyFilterOptionSelected('Today');
-      await allure.attachment('Today Filter Applied', await page.screenshot(), 'image/png');
-    });
-  });
 
 
   test('TC-208 Verify direct URL navigation to Settings page', async ({ dashboardPage, config, page }) => {

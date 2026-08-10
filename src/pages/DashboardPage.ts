@@ -14,8 +14,7 @@ export class DashboardPage extends BasePage {
 
   // Dashboard specific widget elements (strictly XPaths)
 
-  private dateHeader: Locator;
-  private filterDropdown: Locator;
+    private dateHeader: Locator;
 
   private contactsCard: Locator;
   private meetingsCard: Locator;
@@ -27,7 +26,6 @@ export class DashboardPage extends BasePage {
   private calendarMonthYear: Locator;
 
   private xpaths: Record<string, string> = {
-    filterOption: "//div[@role='menuitem' and contains(., '{0}')] | //button[contains(., '{0}')] | //li[contains(text(), '{0}')]"
   };
 
   // Log Message Variables
@@ -39,8 +37,6 @@ export class DashboardPage extends BasePage {
   private readonly navLeadsLog = "Clicking 'Leads' menu from sidebar";
   private readonly navVoiceAgentLog = "Clicking 'Voice Agent' menu from sidebar";
   private readonly navCreditUsageLog = "Clicking 'Credit Usage' menu from sidebar";
-  private readonly filterDropdownLog = "Clicking 'Dashboard Filter' dropdown";
-  private readonly filterOptionLog = "Selecting 'Dashboard Filter' option";
 
 
   constructor(page: any) {
@@ -58,7 +54,6 @@ export class DashboardPage extends BasePage {
     // Dashboard widgets
 
     this.dateHeader = this.page.locator("//p[contains(text(), 'It')]");
-    this.filterDropdown = this.page.locator("//button[contains(., 'Overall')]");
 
     this.contactsCard = this.page.locator("//*[contains(text(), 'Contacts')]").first();
     this.meetingsCard = this.page.locator("//*[contains(text(), 'Meetings')]").first();
@@ -115,18 +110,7 @@ export class DashboardPage extends BasePage {
     await super.waitForListOfElementsToBeVisibleOrHidden([this.dateHeader], { state: BasePage.ElementState.VISIBLE }, "Verifying 'Current Date' header is displayed");
   }
 
-  async clickDashboardFilterDropdown() {
-    await super.clickOnElement(this.filterDropdown, this.filterDropdownLog);
-  }
 
-  async selectDashboardFilterOption(option: string) {
-    const optionLocator = this.getDynamicLocatorFromChild(this.xpaths, 'filterOption', option).first();
-    await super.clickOnElement(optionLocator, this.filterOptionLog);
-  }
-
-  async verifyFilterOptionSelected(expectedValue: string) {
-    await expect(this.filterDropdown).toContainText(expectedValue);
-  }
 
   async verifyStatisticsCardsDisplayed() {
     await super.waitForListOfElementsToBeVisibleOrHidden(

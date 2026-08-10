@@ -3,10 +3,6 @@
     "welcome": {
       "userFirstName": "Raja"
     },
-    "filters": {
-      "overall": "Overall",
-      "today": "Today"
-    },
     "expectedStats": {
       "contacts": "Contacts",
       "meetings": "Meetings",
