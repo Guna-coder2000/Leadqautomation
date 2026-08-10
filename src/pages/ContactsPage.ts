@@ -173,13 +173,13 @@ export class ContactsPage extends BasePage {
   }
 
   async verifyContactRecordDisplayedInGrid(name: string) {
-    const contactCell = this.page.locator(`xpath=//*[contains(text(), '${name}')]`).filter({ visible: true }).first();
-    await super.waitForListOfElementsToBeVisibleOrHidden([contactCell], { state: BasePage.ElementState.VISIBLE }, `Verifying contact record for ${name} is displayed in the data grid`);
+    const rowLocator = this.page.locator(`//tr[.//td[contains(normalize-space(), '${name}')]] | //div[@role='row' or contains(@class, 'row')][.//*[contains(normalize-space(), '${name}')]]`).first();
+    await super.waitForListOfElementsToBeVisibleOrHidden([rowLocator], { state: BasePage.ElementState.VISIBLE }, `Verifying contact record for ${name} is displayed in the data grid`);
   }
 
   async verifyContactRecordNotDisplayedInGrid(name: string) {
-    const contactCell = this.page.locator(`xpath=//*[contains(text(), '${name}')]`).filter({ visible: true }).first();
-    await super.waitForListOfElementsToBeVisibleOrHidden([contactCell], { state: BasePage.ElementState.HIDDEN }, `Verifying contact record for ${name} is NOT displayed in the data grid`);
+    const rowLocator = this.page.locator(`//tr[.//td[contains(normalize-space(), '${name}')]] | //div[@role='row' or contains(@class, 'row')][.//*[contains(normalize-space(), '${name}')]]`).first();
+    await super.waitForListOfElementsToBeVisibleOrHidden([rowLocator], { state: BasePage.ElementState.HIDDEN }, `Verifying contact record for ${name} is NOT displayed in the data grid`);
   }
 
   async verifyContactDetailsHeaderDisplayed() {
