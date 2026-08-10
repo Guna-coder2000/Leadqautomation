@@ -11,8 +11,8 @@ const isCI = !!(process.env.CI || process.env.GITHUB_ACTIONS || process.env.JENK
 export default defineConfig({
   testDir: './src/tests',
   timeout: 90000,
-  fullyParallel: false,
-  workers: 1,
+  fullyParallel: true, // Enabled for parallel execution within stages
+  // workers: undefined, // Let Playwright decide based on CPU cores
   expect: {
     timeout: 10000
   },
@@ -27,20 +27,33 @@ export default defineConfig({
     actionTimeout: 15000,
     navigationTimeout: 45000,
     trace: 'on',
-    screenshot: 'on',
-    video: 'on',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+    // CI servers use bundled Chromium; local machine uses installed Google Chrome
+    ...(isCI ? {} : { channel: 'chrome' }),
+    // Run headed (visible) locally, headless in cloud CI
+    headless: !!(process.env.GITHUB_ACTIONS || process.env.GITLAB_CI),
+    viewport: { width: 1280, height: 720 },
+    ignoreHTTPSErrors: true,
   },
   projects: [
     {
-      name: 'chrome',
-      use: {
-        // CI servers use bundled Chromium; local machine uses installed Google Chrome
-        ...(isCI ? {} : { channel: 'chrome' }),
-        // Run headed (visible) locally and on local Jenkins, but headless in cloud CI
-        headless: !!(process.env.GITHUB_ACTIONS || process.env.GITLAB_CI),
-        viewport: { width: 1280, height: 720 },
-        ignoreHTTPSErrors: true,
-      },
+      name: '1-Login',
+      testMatch: /.*login\.spec\.ts/,
     },
+    {
+      name: '2-Dashboard',
+      testMatch: /.*dashboard\.spec\.ts/,
+      dependencies: ['1-Login'],
+    },
+    {
+      name: '3-Other-UI-Tests', // Captures contacts, profile, etc.
+      testIgnore: [/.*login\.spec\.ts/, /.*dashboard\.spec\.ts/, /.*api\/.*/],
+      dependencies: ['2-Dashboard'], 
+    },
+    {
+      name: 'API-Tests',
+      testMatch: /.*api\/.*/, // API tests have no dependencies, they run instantly
+    }
   ],
 });
