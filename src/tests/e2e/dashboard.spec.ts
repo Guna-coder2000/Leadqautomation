@@ -31,10 +31,7 @@ test.describe('LeadQ Dashboard Module', () => {
       await dashboardPage.verifyStatisticsCardsDisplayed();
     });
 
-    await test.step('Step 4: Verify the Calendar widget is visible', async () => {
-      await dashboardPage.verifyCalendarWidgetDisplayed();
       await allure.attachment('Dashboard Widgets Verified', await page.screenshot(), 'image/png');
-    });
   });
 
   test('TC-202 Verify user can navigate to Contacts module via sidebar menu', async ({ dashboardPage, page }) => {

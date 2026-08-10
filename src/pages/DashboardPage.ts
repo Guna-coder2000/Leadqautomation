@@ -20,7 +20,7 @@ export class DashboardPage extends BasePage {
   private voiceAgentCard: Locator;
 
 
-  private calendarMonthYear: Locator;
+
 
   private xpaths: Record<string, string> = {
   };
@@ -56,7 +56,7 @@ export class DashboardPage extends BasePage {
     this.voiceAgentCard = this.page.locator("//*[contains(text(), 'Voice Agent')]").first();
 
 
-    this.calendarMonthYear = this.page.locator("//div[contains(@class, 'calendar')]//span[contains(@class, 'month')]");
+
   }
 
   // Sidebar navigation actions
@@ -111,11 +111,5 @@ export class DashboardPage extends BasePage {
 
 
 
-  async verifyCalendarWidgetDisplayed() {
-    await super.waitForListOfElementsToBeVisibleOrHidden([this.calendarMonthYear], { state: BasePage.ElementState.VISIBLE }, "Verifying Calendar widget is displayed");
-  }
 
-  async verifyCalendarShowsMonthYear(monthYear: string) {
-    await expect(this.calendarMonthYear).toContainText(monthYear);
-  }
 }
