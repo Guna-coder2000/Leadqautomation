@@ -100,9 +100,15 @@ You can now run the framework in 3 different ways.
 
 ### Method A: Run Locally in VS Code (For Development)
 * **How it works:** Runs directly on your computer. A physical Chrome window will open so you can see the tests executing.
-* **Commands:**
+* **NPM Scripts (Shortcuts):**
   1. To run the tests: `npm run test`
   2. To view the HTML report & send the email: `npm run report:allure`
+* **Raw Playwright Commands (Advanced):**
+  If you want more control, you can use the built-in `npx playwright test` commands directly:
+  1. **Run all tests (Default):** `npx playwright test`
+  2. **Run tests in Headed Mode (Watch the browser):** `npx playwright test --headed`
+  3. **Run tests with the Playwright UI (Interactive):** `npx playwright test --ui`
+  4. **Run a single specific test file:** `npx playwright test src/tests/e2e/login.spec.ts --headed`
 
 ### Method B: Run via Local Jenkins Pipeline
 * **How it works:** Jenkins runs the tests silently in the background and generates a permanent report history.
