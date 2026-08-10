@@ -249,17 +249,19 @@ test.describe('LeadQ Authentication Module', () => {
     });
   });
 
-  test('TC-009 Verify login page URL matches expected LeadQ domain', async ({ loginPage, config, page }) => {
+  test('TC-009 Verify login page URL matches expected environment domain', async ({ loginPage, config, page }) => {
     allure.story('URL Validation');
     allure.severity('minor');
-    allure.description('Verify application URL matches expected domain.');
+    allure.description('Verify application URL matches expected domain based on the active environment.');
 
     await test.step('Precondition: User navigates to the login page', async () => {
       await loginPage.navigateToLogin(config.baseURL);
     });
 
     await test.step('Step 1: Verify the URL contains the expected application domain', async () => {
-      await expect(page).toHaveURL(/.*leadq.ai/);
+      // Clean up baseURL to match exactly what Playwright resolves to
+      const cleanBaseURL = config.baseURL.replace(/\/$/, '');
+      await expect(page).toHaveURL(new RegExp(cleanBaseURL.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
       await allure.attachment('Login URL Verification', await page.screenshot(), 'image/png');
     });
   });
