@@ -27,10 +27,12 @@ export default defineConfig({
     actionTimeout: 15000,
     navigationTimeout: 45000,
     trace: 'on',
-    screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
+    screenshot: 'on',
+    video: 'on',
     // CI servers use bundled Chromium; local machine uses installed Google Chrome
     ...(isCI ? {} : { channel: 'chrome' }),
+    // Explicitly define the browser engine for peace of mind
+    browserName: 'chromium',
     // Run headed (visible) locally, headless in cloud CI
     headless: !!(process.env.GITHUB_ACTIONS || process.env.GITLAB_CI),
     viewport: { width: 1280, height: 720 },
@@ -38,18 +40,18 @@ export default defineConfig({
   },
   projects: [
     {
-      name: '1-Login',
+      name: 'Chrome-1-Login',
       testMatch: /.*login\.spec\.ts/,
     },
     {
-      name: '2-Dashboard',
+      name: 'Chrome-2-Dashboard',
       testMatch: /.*dashboard\.spec\.ts/,
-      dependencies: ['1-Login'],
+      dependencies: ['Chrome-1-Login'],
     },
     {
-      name: '3-Other-UI-Tests', // Captures contacts, profile, etc.
+      name: 'Chrome-3-Other-UI', // Captures contacts, profile, etc.
       testIgnore: [/.*login\.spec\.ts/, /.*dashboard\.spec\.ts/, /.*api\/.*/],
-      dependencies: ['2-Dashboard'], 
+      dependencies: ['Chrome-2-Dashboard'], 
     },
     {
       name: 'API-Tests',
