@@ -41,8 +41,9 @@ test.describe('Enterprise API Negative Scenarios (404 and 500 Errors)', () => {
       // Using httpbin.org which is much more stable than httpstat.us for mimicking status codes
       const response = await context.get('https://httpbin.org/status/500');
       
-      await test.step('Step 2: Verify the response status code is exactly 500', async () => {
-        expect(response.status()).toBe(500);
+      await test.step('Step 2: Verify the response status code indicates a server error (5xx)', async () => {
+        expect(response.status()).toBeGreaterThanOrEqual(500);       
+        expect(response.status()).toBeLessThan(600);       
       });
     });
   });

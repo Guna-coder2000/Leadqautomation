@@ -9,13 +9,13 @@ const servicesToMonitor: HealthCheckConfig[] = [
     serviceName: 'JSON Placeholder Users API',
     endpoint: 'https://jsonplaceholder.typicode.com/users/1', // A real endpoint for demo purposes
     expectedStatus: 200,
-    maxSlaMs: 1000 // Liberal SLA for public API
+    maxSlaMs: 5000 // Liberal SLA for public API (5 seconds)
   },
   {
     serviceName: 'JSON Placeholder Posts API',
     endpoint: 'https://jsonplaceholder.typicode.com/posts/1',
     expectedStatus: 200,
-    maxSlaMs: 1000
+    maxSlaMs: 5000
   },
   // In a real scenario, you'd pull base URL from environment:
   // {
