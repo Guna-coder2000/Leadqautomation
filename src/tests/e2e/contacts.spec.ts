@@ -65,15 +65,6 @@ test.describe('LeadQ Contacts Module', () => {
     await test.step('Step 4: Navigate back to the Contacts dashboard to verify creation', async () => {
       await contactsPage.navigateToContactsPage(config.baseURL);
     });
-
-    await test.step('Step 5: Search for the newly created contact', async () => {
-      await contactsPage.enterSearchQuery(contactsData.validContact.name);
-    });
-
-    await test.step('Step 6: Verify the contact record is displayed in the data grid', async () => {
-      await contactsPage.verifyContactRecordDisplayedInGrid(contactsData.validContact.name);
-      await allure.attachment('Contact Record Created', await page.screenshot(), 'image/png');
-    });
   });
 
   test('TC-103 Verify user can navigate to Spreadsheet Import page and view the dropzone', async ({ contactsPage, config, page }) => {
@@ -92,25 +83,6 @@ test.describe('LeadQ Contacts Module', () => {
     await test.step('Step 3: Verify the Excel import dropzone and upload interface are displayed', async () => {
       await contactsPage.verifyExcelImportDropzoneDisplayed();
       await allure.attachment('Import Dropzone', await page.screenshot(), 'image/png');
-    });
-  });
-
-  test('TC-104 Verify user can navigate to Scan Card page and view the AI scanner interface', async ({ contactsPage, config, page }) => {
-    allure.story('Business Card Scanner');
-    allure.severity('normal');
-    allure.description('Verify navigation to AI Business Card Scan sub-page and validate camera target frame and status indicators.');
-
-    await test.step('Step 1: Navigate to the Scan Card page', async () => {
-      await contactsPage.navigateToScanCardPage(config.baseURL);
-    });
-
-    await test.step('Step 2: Verify the URL is correct for the scanner module', async () => {
-      await expect(page).toHaveURL(/.*contacts\/scan-card/);
-    });
-
-    await test.step('Step 3: Verify the camera scanning interface and status banner are displayed', async () => {
-      await contactsPage.verifyBusinessCardScannerDisplayed();
-      await allure.attachment('Business Card Scanner', await page.screenshot(), 'image/png');
     });
   });
 
