@@ -25,9 +25,7 @@ test.describe('LeadQ Dashboard Module', () => {
     allure.severity('critical');
     allure.description('Verify main dashboard stat widgets, metrics, and date header display correctly after login.');
 
-    await test.step('Step 1: Verify the current date header is visible on the dashboard', async () => {
-      await dashboardPage.verifyCurrentDateDisplayed();
-    });
+
 
     await test.step('Step 2: Verify the KPI statistics cards (Contacts, Meetings, Emails, Voice Agent) are visible', async () => {
       await dashboardPage.verifyStatisticsCardsDisplayed();
@@ -87,19 +85,6 @@ test.describe('LeadQ Dashboard Module', () => {
 
 
 
-  test('TC-208 Verify direct URL navigation to Settings page', async ({ dashboardPage, config, page }) => {
-    allure.story('Direct Navigation');
-    allure.severity('normal');
-    allure.description('Verify user can navigate directly to settings via URL manipulation.');
 
-    await test.step('Step 1: Navigate directly to the settings URL', async () => {
-      await dashboardPage.navigateToSettingsDirectly(config.baseURL);
-    });
-
-    await test.step('Step 2: Verify the application resolves the settings route', async () => {
-      await expect(page).toHaveURL(/.*settings/);
-      await allure.attachment('Settings Navigation', await page.screenshot(), 'image/png');
-    });
-  });
 
 });

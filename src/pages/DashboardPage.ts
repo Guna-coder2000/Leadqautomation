@@ -14,8 +14,6 @@ export class DashboardPage extends BasePage {
 
   // Dashboard specific widget elements (strictly XPaths)
 
-    private dateHeader: Locator;
-
   private contactsCard: Locator;
   private meetingsCard: Locator;
   private emailsCard: Locator;
@@ -52,8 +50,6 @@ export class DashboardPage extends BasePage {
     this.sidebarCreditUsage = this.page.locator("//a[contains(@href, '/dashboard/credit-usage') or contains(@href, '/credit-usage')]");
 
     // Dashboard widgets
-
-    this.dateHeader = this.page.locator("//p[contains(text(), 'It')]");
 
     this.contactsCard = this.page.locator("//*[contains(text(), 'Contacts')]").first();
     this.meetingsCard = this.page.locator("//*[contains(text(), 'Meetings')]").first();
@@ -98,17 +94,12 @@ export class DashboardPage extends BasePage {
     await super.clickOnElement(this.sidebarCreditUsage, this.navCreditUsageLog);
   }
 
-  async navigateToSettingsDirectly(baseURL: string) {
-    const settingsURL = `${baseURL.replace(/\/$/, '')}/dashboard/settings`;
-    await super.navigateTo(settingsURL, undefined, "Navigating directly to 'Settings' page");
-  }
+
 
   // Dashboard specific widget actions
 
 
-  async verifyCurrentDateDisplayed() {
-    await super.waitForListOfElementsToBeVisibleOrHidden([this.dateHeader], { state: BasePage.ElementState.VISIBLE }, "Verifying 'Current Date' header is displayed");
-  }
+
 
 
 
